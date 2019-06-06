@@ -30,5 +30,5 @@ pip install git+https://github.com/maskarb/aqpy
 ```
 
 ##### Brief Tutorial:
-[ipython notebook](https://github.com/maskarb/aqpy/tutorial/tutorial.ipynb)
+[ipython notebook](https://github.com/maskarb/AqPy/blob/master/tutorial/tutorial.ipynb)
 
