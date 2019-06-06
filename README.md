@@ -24,5 +24,11 @@ conda install gurobi
 ```
 Gurobi requires a free academic license which can be acquired from [here](https://user.gurobi.com/download/licenses/free-academic "Retrieving a Free Academic license"). Installation and verification of the license is only possible on the university network.
 
+Following the installation of Gurobi, the AqPy package can be installed with the following command:
+```bash
+pip install git+https://github.com/maskarb/aqpy
+```
 
+##### Brief Tutorial:
+[ipython notebook](https://github.com/maskarb/aqpy/tutorial/tutorial.ipynb)
 
