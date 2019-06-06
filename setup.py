@@ -7,7 +7,7 @@ setup(
     author_email='maskarb@gmail.com',
     packages=['aqpy',],
     license='MIT license',
-    long_description=open('README.txt').read(),
+    long_description=open('README.md').read(),
     install_requires=[
         "matplotlib",
         "numpy",

@@ -1,4 +1,4 @@
-# aqpy.py
+# aq.py
 
 # Solve 2-D aquifer pumping optimization
 
@@ -12,7 +12,7 @@ import gurobipy as gu
 import matplotlib.pyplot as plt
 import numpy as np
 
-from report import lindo
+from .report import lindo
 
 tupledict = gu.tupledict  # pylint: disable=E1101
 
@@ -314,7 +314,7 @@ class Grid(object):
     def print_report(self):
         """Generates lindo style report."""
         if self._solved:
-            lindo(self.Model)
+            lifrlindo(self.Model)
         else:
             print("No results to print.")
 

@@ -1,6 +1,6 @@
 Pump Results
-(3, 3):    0.92507 fpd, head (ft):  23.00
-(5, 5):    0.54352 fpd, head (ft):  23.00
-(7, 7):    0.55173 fpd, head (ft):  23.00
-Total Flow (q): 2.02 fpd
-Total Flow (W): 505079.64 cfd
+(3, 3):    0.92785 fpd, head (ft):  23.00
+(5, 5):    0.53438 fpd, head (ft):  23.00
+(7, 7):    0.54549 fpd, head (ft):  23.00
+Total Flow (q): 2.01 fpd
+Total Flow (W): 501928.06 cfd
