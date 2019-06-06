@@ -1,5 +1,5 @@
-Module aqpy
-===========
+Module aq
+=========
 
 Functions
 ---------

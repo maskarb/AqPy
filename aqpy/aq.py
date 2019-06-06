@@ -314,7 +314,7 @@ class Grid(object):
     def print_report(self):
         """Generates lindo style report."""
         if self._solved:
-            lifrlindo(self.Model)
+            lindo(self.Model)
         else:
             print("No results to print.")
 
@@ -435,8 +435,8 @@ if __name__ == "__main__":
     print()
 
 """
-import aqpy
-g = aqpy.Grid(8, 8)
+from aqpy import aq
+g = aq.Grid(8, 8)
 g.add_units('ft', 'd')
 wells = [(3,3),(5,5),(7,7)]
 g.add_wells(wells)
