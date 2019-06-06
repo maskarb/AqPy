@@ -29,6 +29,6 @@ Following the installation of Gurobi, the AqPy package can be installed with the
 pip install git+https://github.com/maskarb/aqpy
 ```
 
-##### Brief Tutorial:
-[ipython notebook](https://github.com/maskarb/AqPy/blob/master/tutorial/tutorial.ipynb)
+### Example Usage:
+[Example Problem](https://github.com/maskarb/AqPy/blob/master/tutorial/tutorial.ipynb)
 
