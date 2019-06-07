@@ -36,28 +36,42 @@ import gurobipy as gu
 import matplotlib.pyplot as plt
 import numpy as np
 
-#from .report import lindo
+# from .report import lindo
 
 tupledict = gu.tupledict  # pylint: disable=E1101
 
 
-def make_zero_tuple_dict(x, y):
+def _make_zero_tuple_dict(x, y):
     return tupledict((tup, 0) for tup in itertools.product(range(1, x), range(1, y)))
 
 
 class Grid(object):
+    &#34;&#34;&#34;
+    The Grid class represents the 2-dimensional aquifer. The class is
+    instantiated with width and height and the remaining attributes are
+    added with adder methods. The order in which attributes are added
+    is important. Check the method documentation if errors are raised.
+
+    Attributes:
+        width (int): Number of grid cells width
+        height (int): Number of grid cells height
+
+    &#34;&#34;&#34;
     def __init__(self, width: int, height: int):
         &#34;&#34;&#34;
         Parameters:
             width (int) :
             height (int):
                 Dimensions of the aquifer
+
+            &gt;&gt;&gt; g = Grid(8, 8)
+            Academic license - for non-commercial use only
         &#34;&#34;&#34;
         self._width = width
         self._height = height
         self.Model = gu.Model()  # pylint: disable=E1101
-        self.wells = make_zero_tuple_dict(self._width + 1, self._height + 1)
-        self.LHS = make_zero_tuple_dict(self._width + 1, self._height + 1)
+        self.wells = _make_zero_tuple_dict(self._width + 1, self._height + 1)
+        self.LHS = _make_zero_tuple_dict(self._width + 1, self._height + 1)
         self.well_coords = []
         self.contam_coords = []
         self._bounds = {
@@ -75,11 +89,22 @@ class Grid(object):
 
     def add_boundary_contaminant(self, *args):
         &#34;&#34;&#34;Adds boundary (left, top, right, bottom) contaminants by
-            adding model contraint. Head values within aquifer next to
-            boundary are contrained to be greater than the boundary head
+            adding model constraint. Head values within aquifer next to
+            boundary are constrained to be greater than the boundary head
 
             Parameters:
                 *args (str): the boundary side (&#39;left&#39;, &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;)
+
+            Example usage:
+                &gt;&gt;&gt; g = Grid(8, 8)
+                &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
+                Traceback (most recent call last):
+                    ...
+                TypeError: Boundary head must be specified before adding boundary contaminant
+
+                &gt;&gt;&gt; g = Grid(8, 8)
+                &gt;&gt;&gt; g.add_boundary_heads(bottom=39) # must be specified before adding the boundary contaminant
+                &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
         &#34;&#34;&#34;
         w, h = self._width, self._height
         for bound in args:
@@ -104,7 +129,11 @@ class Grid(object):
             be a no-flow boundary.
 
             Parameters:
-                **kwargs (str): the boundary side and its head value
+                **kwargs (str): the boundary side and its head value.
+
+            Example usage:
+                &gt;&gt;&gt; g = Grid(8, 8)
+                &gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)
         &#34;&#34;&#34;
         for k in kwargs.keys():
             if k.lower() not in [&#34;top&#34;, &#34;bottom&#34;, &#34;right&#34;, &#34;left&#34;]:
@@ -347,13 +376,13 @@ class Grid(object):
             self._heads[coord] = val
 
     def _add_constraints(self):
-        self._add_LHS()
+        self._add_lhs()
         self.Model.addConstrs(
             self.LHS[key] == self.wells[key] for key in self.LHS.keys()
         )
         self.Model.update()
 
-    def _add_LHS(self):
+    def _add_lhs(self):
         for i in range(1, self._width + 1):
             for j in range(1, self._height + 1):
                 tx, ty = next(self._Tx), next(self._Ty)
@@ -367,15 +396,24 @@ class Grid(object):
 
     def _boundary_helper(self, a, b, c, direc):
         if direc == &#34;x&#34;:
+            if self._heads[c, 1] is None:
+                raise TypeError(
+                    &#34;Boundary head must be specified before adding boundary contaminant&#34;
+                )
             for j in range(1, a):
                 self.Model.addConstr(self._heads[b, j] &gt;= self._heads[c, j])
                 self.contam_coords.append((c, j))
         elif direc == &#34;y&#34;:
+            if self._heads[1, c] is None:
+                raise TypeError(
+                    &#34;Boundary head must be specified before adding boundary contaminant&#34;
+                )
             for i in range(1, a):
                 self.Model.addConstr(self._heads[i, b] &gt;= self._heads[i, c])
                 self.contam_coords.append((i, c))
 
-    def _dist_helper(self, mean, sd, distribution):
+    @staticmethod
+    def _dist_helper(mean, sd, distribution):
         if distribution == &#34;normal&#34; or distribution == &#34;uniform&#34;:
             sd = 0 if distribution == &#34;uniform&#34; else sd
             while True:
@@ -424,6 +462,10 @@ class Grid(object):
 
 
 if __name__ == &#34;__main__&#34;:
+    import doctest
+    doctest.testmod()
+
+
     width, height = 8, 8
     g = Grid(width, height)
     g.add_units(&#34;ft&#34;, &#34;d&#34;)
@@ -451,12 +493,12 @@ if __name__ == &#34;__main__&#34;:
     g.add_contaminant((6, 2))
     g.add_objective(1)
 
-    g.optimize()
-    g.print_report()
-    g.print_grid_results()
-    g.print_pump_results()
-    g.print_map()
-    print()
+    # g.optimize()
+    # g.print_report()
+    # g.print_grid_results()
+    # g.print_pump_results()
+    # g.print_map()
+    # print()
 
 &#34;&#34;&#34;
 from aqpy import aq
@@ -516,20 +558,6 @@ Results: in ft
 <section>
 </section>
 <section>
-<h2 class="section-title" id="header-functions">Functions</h2>
-<dl>
-<dt id="aq.make_zero_tuple_dict"><code class="name flex">
-<span>def <span class="ident">make_zero_tuple_dict</span></span>(<span>x, y)</span>
-</code></dt>
-<dd>
-<section class="desc"></section>
-<details class="source">
-<summary>Source code</summary>
-<pre><code class="python">def make_zero_tuple_dict(x, y):
-    return tupledict((tup, 0) for tup in itertools.product(range(1, x), range(1, y)))</code></pre>
-</details>
-</dd>
-</dl>
 </section>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
@@ -539,25 +567,53 @@ Results: in ft
 <span>(</span><span>width, height)</span>
 </code></dt>
 <dd>
-<section class="desc"><h2 id="parameters">Parameters</h2>
+<section class="desc"><p>The Grid class represents the 2-dimensional aquifer. The class is
+instantiated with width and height and the remaining attributes are
+added with adder methods. The order in which attributes are added
+is important. Check the method documentation if errors are raised.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>width</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of grid cells width</dd>
+<dt><strong><code>height</code></strong> :&ensp;<code>int</code></dt>
+<dd>Number of grid cells height</dd>
+</dl>
+<h2 id="parameters">Parameters</h2>
 <p>width (int) :
 height (int):
-Dimensions of the aquifer</p></section>
+Dimensions of the aquifer</p>
+<pre><code>&gt;&gt;&gt; g = Grid(8, 8)
+</code></pre>
+<p>Academic license - for non-commercial use only</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">class Grid(object):
+    &#34;&#34;&#34;
+    The Grid class represents the 2-dimensional aquifer. The class is
+    instantiated with width and height and the remaining attributes are
+    added with adder methods. The order in which attributes are added
+    is important. Check the method documentation if errors are raised.
+
+    Attributes:
+        width (int): Number of grid cells width
+        height (int): Number of grid cells height
+
+    &#34;&#34;&#34;
     def __init__(self, width: int, height: int):
         &#34;&#34;&#34;
         Parameters:
             width (int) :
             height (int):
                 Dimensions of the aquifer
+
+            &gt;&gt;&gt; g = Grid(8, 8)
+            Academic license - for non-commercial use only
         &#34;&#34;&#34;
         self._width = width
         self._height = height
         self.Model = gu.Model()  # pylint: disable=E1101
-        self.wells = make_zero_tuple_dict(self._width + 1, self._height + 1)
-        self.LHS = make_zero_tuple_dict(self._width + 1, self._height + 1)
+        self.wells = _make_zero_tuple_dict(self._width + 1, self._height + 1)
+        self.LHS = _make_zero_tuple_dict(self._width + 1, self._height + 1)
         self.well_coords = []
         self.contam_coords = []
         self._bounds = {
@@ -575,11 +631,22 @@ Dimensions of the aquifer</p></section>
 
     def add_boundary_contaminant(self, *args):
         &#34;&#34;&#34;Adds boundary (left, top, right, bottom) contaminants by
-            adding model contraint. Head values within aquifer next to
-            boundary are contrained to be greater than the boundary head
+            adding model constraint. Head values within aquifer next to
+            boundary are constrained to be greater than the boundary head
 
             Parameters:
                 *args (str): the boundary side (&#39;left&#39;, &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;)
+
+            Example usage:
+                &gt;&gt;&gt; g = Grid(8, 8)
+                &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
+                Traceback (most recent call last):
+                    ...
+                TypeError: Boundary head must be specified before adding boundary contaminant
+
+                &gt;&gt;&gt; g = Grid(8, 8)
+                &gt;&gt;&gt; g.add_boundary_heads(bottom=39) # must be specified before adding the boundary contaminant
+                &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
         &#34;&#34;&#34;
         w, h = self._width, self._height
         for bound in args:
@@ -604,7 +671,11 @@ Dimensions of the aquifer</p></section>
             be a no-flow boundary.
 
             Parameters:
-                **kwargs (str): the boundary side and its head value
+                **kwargs (str): the boundary side and its head value.
+
+            Example usage:
+                &gt;&gt;&gt; g = Grid(8, 8)
+                &gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)
         &#34;&#34;&#34;
         for k in kwargs.keys():
             if k.lower() not in [&#34;top&#34;, &#34;bottom&#34;, &#34;right&#34;, &#34;left&#34;]:
@@ -847,13 +918,13 @@ Dimensions of the aquifer</p></section>
             self._heads[coord] = val
 
     def _add_constraints(self):
-        self._add_LHS()
+        self._add_lhs()
         self.Model.addConstrs(
             self.LHS[key] == self.wells[key] for key in self.LHS.keys()
         )
         self.Model.update()
 
-    def _add_LHS(self):
+    def _add_lhs(self):
         for i in range(1, self._width + 1):
             for j in range(1, self._height + 1):
                 tx, ty = next(self._Tx), next(self._Ty)
@@ -867,15 +938,24 @@ Dimensions of the aquifer</p></section>
 
     def _boundary_helper(self, a, b, c, direc):
         if direc == &#34;x&#34;:
+            if self._heads[c, 1] is None:
+                raise TypeError(
+                    &#34;Boundary head must be specified before adding boundary contaminant&#34;
+                )
             for j in range(1, a):
                 self.Model.addConstr(self._heads[b, j] &gt;= self._heads[c, j])
                 self.contam_coords.append((c, j))
         elif direc == &#34;y&#34;:
+            if self._heads[1, c] is None:
+                raise TypeError(
+                    &#34;Boundary head must be specified before adding boundary contaminant&#34;
+                )
             for i in range(1, a):
                 self.Model.addConstr(self._heads[i, b] &gt;= self._heads[i, c])
                 self.contam_coords.append((i, c))
 
-    def _dist_helper(self, mean, sd, distribution):
+    @staticmethod
+    def _dist_helper(mean, sd, distribution):
         if distribution == &#34;normal&#34; or distribution == &#34;uniform&#34;:
             sd = 0 if distribution == &#34;uniform&#34; else sd
             while True:
@@ -929,22 +1009,43 @@ Dimensions of the aquifer</p></section>
 </code></dt>
 <dd>
 <section class="desc"><p>Adds boundary (left, top, right, bottom) contaminants by
-adding model contraint. Head values within aquifer next to
-boundary are contrained to be greater than the boundary head</p>
+adding model constraint. Head values within aquifer next to
+boundary are constrained to be greater than the boundary head</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>*args</code></strong> :&ensp;<code>str</code></dt>
 <dd>the boundary side ('left', 'top', 'right', 'bottom')</dd>
-</dl></section>
+</dl>
+<p>Example usage:
+&gt;&gt;&gt; g = Grid(8, 8)
+&gt;&gt;&gt; g.add_boundary_contaminant("bottom")
+Traceback (most recent call last):
+&hellip;
+TypeError: Boundary head must be specified before adding boundary contaminant</p>
+<pre><code>&gt;&gt;&gt; g = Grid(8, 8)
+&gt;&gt;&gt; g.add_boundary_heads(bottom=39) # must be specified before adding the boundary contaminant
+&gt;&gt;&gt; g.add_boundary_contaminant("bottom")
+</code></pre></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">def add_boundary_contaminant(self, *args):
     &#34;&#34;&#34;Adds boundary (left, top, right, bottom) contaminants by
-        adding model contraint. Head values within aquifer next to
-        boundary are contrained to be greater than the boundary head
+        adding model constraint. Head values within aquifer next to
+        boundary are constrained to be greater than the boundary head
 
         Parameters:
             *args (str): the boundary side (&#39;left&#39;, &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;)
+
+        Example usage:
+            &gt;&gt;&gt; g = Grid(8, 8)
+            &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
+            Traceback (most recent call last):
+                ...
+            TypeError: Boundary head must be specified before adding boundary contaminant
+
+            &gt;&gt;&gt; g = Grid(8, 8)
+            &gt;&gt;&gt; g.add_boundary_heads(bottom=39) # must be specified before adding the boundary contaminant
+            &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
     &#34;&#34;&#34;
     w, h = self._width, self._height
     for bound in args:
@@ -974,8 +1075,11 @@ be a no-flow boundary.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
 <dt><strong><code>**kwargs</code></strong> :&ensp;<code>str</code></dt>
-<dd>the boundary side and its head value</dd>
-</dl></section>
+<dd>the boundary side and its head value.</dd>
+</dl>
+<p>Example usage:
+&gt;&gt;&gt; g = Grid(8, 8)
+&gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)</p></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">def add_boundary_heads(self, **kwargs):
@@ -984,7 +1088,11 @@ be a no-flow boundary.</p>
         be a no-flow boundary.
 
         Parameters:
-            **kwargs (str): the boundary side and its head value
+            **kwargs (str): the boundary side and its head value.
+
+        Example usage:
+            &gt;&gt;&gt; g = Grid(8, 8)
+            &gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)
     &#34;&#34;&#34;
     for k in kwargs.keys():
         if k.lower() not in [&#34;top&#34;, &#34;bottom&#34;, &#34;right&#34;, &#34;left&#34;]:
@@ -1435,11 +1543,6 @@ save pump values.</dd>
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-functions">Functions</a></h3>
-<ul class="">
-<li><code><a title="aq.make_zero_tuple_dict" href="#aq.make_zero_tuple_dict">make_zero_tuple_dict</a></code></li>
-</ul>
-</li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>

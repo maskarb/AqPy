@@ -1,31 +1,47 @@
 Module aq
 =========
 
-Functions
----------
-
-    
-`make_zero_tuple_dict(x, y)`
-:   
-
 Classes
 -------
 
 `Grid(width, height)`
-:   Parameters:
+:   The Grid class represents the 2-dimensional aquifer. The class is
+    instantiated with width and height and the remaining attributes are
+    added with adder methods. The order in which attributes are added
+    is important. Check the method documentation if errors are raised.
+    
+    Attributes:
+        width (int): Number of grid cells width
+        height (int): Number of grid cells height
+    
+    Parameters:
         width (int) :
         height (int):
             Dimensions of the aquifer
+    
+        >>> g = Grid(8, 8)
+        Academic license - for non-commercial use only
 
     ### Methods
 
     `add_boundary_contaminant(self, *args)`
     :   Adds boundary (left, top, right, bottom) contaminants by
-        adding model contraint. Head values within aquifer next to
-        boundary are contrained to be greater than the boundary head
+        adding model constraint. Head values within aquifer next to
+        boundary are constrained to be greater than the boundary head
         
         Parameters:
             *args (str): the boundary side ('left', 'top', 'right', 'bottom')
+        
+        Example usage:
+            >>> g = Grid(8, 8)
+            >>> g.add_boundary_contaminant("bottom")
+            Traceback (most recent call last):
+                ...
+            TypeError: Boundary head must be specified before adding boundary contaminant
+        
+            >>> g = Grid(8, 8)
+            >>> g.add_boundary_heads(bottom=39) # must be specified before adding the boundary contaminant
+            >>> g.add_boundary_contaminant("bottom")
 
     `add_boundary_heads(self, **kwargs)`
     :   Specifies the boundary (left, top, right, bottom) head value.
@@ -33,7 +49,11 @@ Classes
         be a no-flow boundary.
         
         Parameters:
-            **kwargs (str): the boundary side and its head value
+            **kwargs (str): the boundary side and its head value.
+        
+        Example usage:
+            >>> g = Grid(8, 8)
+            >>> g.add_boundary_heads(top=29, bottom=39)
 
     `add_cell_lengths(self, dx, dy=None)`
     :   Specifies the height and width of the cells.
