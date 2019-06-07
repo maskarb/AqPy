@@ -5,7 +5,7 @@ This module is used to solve 2-D aquifer pumping optimization problems.
 
 ### Installation
 
-Anaconda is the recommended Python distribution for this module. The Anaconda distribution can be obtained [here](https://www.anaconda.com/distribution/ "Anaconda Distribution Download").
+For this module, Anaconda is the recommended Python distribution which can be obtained [here](https://www.anaconda.com/distribution/ "Anaconda Distribution Download").
 
 
 ##### Dependencies:
