@@ -50,7 +50,8 @@ Classes
         be a no-flow boundary.
         
         Parameters:
-            **kwargs (str): the boundary side and its head value.
+            **kwargs: the boundary side and its head value
+                (ex: Grid.add_boundary_heads(top=29) ).
         
         Example usage:
         

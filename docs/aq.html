@@ -130,7 +130,8 @@ class Grid(object):
             be a no-flow boundary.
 
             Parameters:
-                **kwargs (str): the boundary side and its head value.
+                **kwargs: the boundary side and its head value
+                    (ex: Grid.add_boundary_heads(top=29) ).
 
             Example usage:
 
@@ -674,7 +675,8 @@ Dimensions of the aquifer</p>
             be a no-flow boundary.
 
             Parameters:
-                **kwargs (str): the boundary side and its head value.
+                **kwargs: the boundary side and its head value
+                    (ex: Grid.add_boundary_heads(top=29) ).
 
             Example usage:
 
@@ -1080,8 +1082,9 @@ If a value is not provided for a boundary, it is assumed to
 be a no-flow boundary.</p>
 <h2 id="parameters">Parameters</h2>
 <dl>
-<dt><strong><code>**kwargs</code></strong> :&ensp;<code>str</code></dt>
-<dd>the boundary side and its head value.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>the boundary side and its head value
+(ex: Grid.add_boundary_heads(top=29) ).</dd>
 </dl>
 <p>Example usage:</p>
 <pre><code>&gt;&gt;&gt; g = Grid(8, 8)
@@ -1095,7 +1098,8 @@ be a no-flow boundary.</p>
         be a no-flow boundary.
 
         Parameters:
-            **kwargs (str): the boundary side and its head value.
+            **kwargs: the boundary side and its head value
+                (ex: Grid.add_boundary_heads(top=29) ).
 
         Example usage:
 

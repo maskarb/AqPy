@@ -10,18 +10,6 @@ Classes
     added with adder methods. The order in which attributes are added
     is important. Check the method documentation if errors are raised.
     
-Module aq
-=========
-
-Classes
--------
-
-`Grid(width, height)`
-:   The Grid class represents the 2-dimensional aquifer. The class is
-    instantiated with width and height and the remaining attributes are
-    added with adder methods. The order in which attributes are added
-    is important. Check the method documentation if errors are raised.
-    
     Attributes:
         width (int): Number of grid cells width
         height (int): Number of grid cells height
@@ -62,7 +50,8 @@ Classes
         be a no-flow boundary.
         
         Parameters:
-            **kwargs (str): the boundary side and its head value.
+            **kwargs: the boundary side and its head value
+                (ex: Grid.add_boundary_heads(top=29) ).
         
         Example usage:
         
