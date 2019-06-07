@@ -12,7 +12,7 @@ import gurobipy as gu
 import matplotlib.pyplot as plt
 import numpy as np
 
-# from .report import lindo
+from .report import lindo
 
 tupledict = gu.tupledict  # pylint: disable=E1101
 
@@ -72,6 +72,7 @@ class Grid(object):
                 *args (str): the boundary side ('left', 'top', 'right', 'bottom')
 
             Example usage:
+
                 >>> g = Grid(8, 8)
                 >>> g.add_boundary_contaminant("bottom")
                 Traceback (most recent call last):
@@ -108,6 +109,7 @@ class Grid(object):
                 **kwargs (str): the boundary side and its head value.
 
             Example usage:
+
                 >>> g = Grid(8, 8)
                 >>> g.add_boundary_heads(top=29, bottom=39)
         """

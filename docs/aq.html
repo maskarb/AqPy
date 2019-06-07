@@ -36,7 +36,7 @@ import gurobipy as gu
 import matplotlib.pyplot as plt
 import numpy as np
 
-# from .report import lindo
+#from .report import lindo
 
 tupledict = gu.tupledict  # pylint: disable=E1101
 
@@ -96,6 +96,7 @@ class Grid(object):
                 *args (str): the boundary side (&#39;left&#39;, &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;)
 
             Example usage:
+
                 &gt;&gt;&gt; g = Grid(8, 8)
                 &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
                 Traceback (most recent call last):
@@ -132,6 +133,7 @@ class Grid(object):
                 **kwargs (str): the boundary side and its head value.
 
             Example usage:
+
                 &gt;&gt;&gt; g = Grid(8, 8)
                 &gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)
         &#34;&#34;&#34;
@@ -638,6 +640,7 @@ Dimensions of the aquifer</p>
                 *args (str): the boundary side (&#39;left&#39;, &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;)
 
             Example usage:
+
                 &gt;&gt;&gt; g = Grid(8, 8)
                 &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
                 Traceback (most recent call last):
@@ -674,6 +677,7 @@ Dimensions of the aquifer</p>
                 **kwargs (str): the boundary side and its head value.
 
             Example usage:
+
                 &gt;&gt;&gt; g = Grid(8, 8)
                 &gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)
         &#34;&#34;&#34;
@@ -1016,13 +1020,14 @@ boundary are constrained to be greater than the boundary head</p>
 <dt><strong><code>*args</code></strong> :&ensp;<code>str</code></dt>
 <dd>the boundary side ('left', 'top', 'right', 'bottom')</dd>
 </dl>
-<p>Example usage:
-&gt;&gt;&gt; g = Grid(8, 8)
+<p>Example usage:</p>
+<pre><code>&gt;&gt;&gt; g = Grid(8, 8)
 &gt;&gt;&gt; g.add_boundary_contaminant("bottom")
 Traceback (most recent call last):
-&hellip;
-TypeError: Boundary head must be specified before adding boundary contaminant</p>
-<pre><code>&gt;&gt;&gt; g = Grid(8, 8)
+    ...
+TypeError: Boundary head must be specified before adding boundary contaminant
+
+&gt;&gt;&gt; g = Grid(8, 8)
 &gt;&gt;&gt; g.add_boundary_heads(bottom=39) # must be specified before adding the boundary contaminant
 &gt;&gt;&gt; g.add_boundary_contaminant("bottom")
 </code></pre></section>
@@ -1037,6 +1042,7 @@ TypeError: Boundary head must be specified before adding boundary contaminant</p
             *args (str): the boundary side (&#39;left&#39;, &#39;top&#39;, &#39;right&#39;, &#39;bottom&#39;)
 
         Example usage:
+
             &gt;&gt;&gt; g = Grid(8, 8)
             &gt;&gt;&gt; g.add_boundary_contaminant(&#34;bottom&#34;)
             Traceback (most recent call last):
@@ -1077,9 +1083,10 @@ be a no-flow boundary.</p>
 <dt><strong><code>**kwargs</code></strong> :&ensp;<code>str</code></dt>
 <dd>the boundary side and its head value.</dd>
 </dl>
-<p>Example usage:
-&gt;&gt;&gt; g = Grid(8, 8)
-&gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)</p></section>
+<p>Example usage:</p>
+<pre><code>&gt;&gt;&gt; g = Grid(8, 8)
+&gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)
+</code></pre></section>
 <details class="source">
 <summary>Source code</summary>
 <pre><code class="python">def add_boundary_heads(self, **kwargs):
@@ -1091,6 +1098,7 @@ be a no-flow boundary.</p>
             **kwargs (str): the boundary side and its head value.
 
         Example usage:
+
             &gt;&gt;&gt; g = Grid(8, 8)
             &gt;&gt;&gt; g.add_boundary_heads(top=29, bottom=39)
     &#34;&#34;&#34;

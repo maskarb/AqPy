@@ -33,6 +33,7 @@ Classes
             *args (str): the boundary side ('left', 'top', 'right', 'bottom')
         
         Example usage:
+        
             >>> g = Grid(8, 8)
             >>> g.add_boundary_contaminant("bottom")
             Traceback (most recent call last):
@@ -52,6 +53,7 @@ Classes
             **kwargs (str): the boundary side and its head value.
         
         Example usage:
+        
             >>> g = Grid(8, 8)
             >>> g.add_boundary_heads(top=29, bottom=39)
 
